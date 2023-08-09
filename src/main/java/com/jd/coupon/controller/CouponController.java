@@ -39,6 +39,7 @@ public class CouponController {
     @Autowired
     private AuthComponent authComponent;
 
+    /* PASSED */
     @PostMapping("post/request")
     @ApiOperation("Post a request to post coupons")
     @ApiResponse(description = "return true if request initiated")
@@ -46,8 +47,8 @@ public class CouponController {
         @RequestParam("token") @ApiParam("token") String token,
         @RequestParam("business") @ApiParam("business the coupon(s) belong to") String business,
         @RequestParam("name") @ApiParam("coupon name") String name,
-        @RequestParam("type") @ApiParam("coupon type") Short type,
         @RequestParam("count") @ApiParam("count") Integer count,
+        @RequestParam(value = "type", required = false) @ApiParam("coupon type") Short type,
         @RequestParam(value = "value", required = false) @ApiParam("coupon value") BigDecimal value,
         @RequestParam(value = "limit", required = false) @ApiParam("coupon limit") BigDecimal limit,
         @RequestParam(value = "start", required = false) @ApiParam("start date") Date start,
@@ -90,6 +91,7 @@ public class CouponController {
         return true;
     }
 
+    /* PASSED */
     @PostMapping("post/approve")
     @ApiOperation("Approve a request to post coupons")
     @ApiResponse(description = "return true if approval success")
@@ -100,7 +102,7 @@ public class CouponController {
         if (operator == Staff.EMPTY) {
             throw PermissionDenyException.INSTANCE;
         }
-        CouponRequest request = couponComponent.find(token);
+        CouponRequest request = couponComponent.find(id);
         if (request == null) {
             return false;
         }
@@ -108,27 +110,32 @@ public class CouponController {
             Coupon coupon = request.getCoupon();
             String business = coupon.getBusiness();
             String name = coupon.getName();
+            Short type = coupon.getType();
             BigDecimal value = coupon.getValue();
             BigDecimal limit = coupon.getLimitValue();
             Date start = coupon.getStart();
             Date end = coupon.getEnd();
             Integer count = coupon.getRemain();
             if (couponService.exists(business, name)) {
-                return ObjectUtil.anyNotNull(value, limit, start, end) &&
+                if (ObjectUtil.allNull(value, limit, start, end, type)) {
                     couponService.post(business, name, count);
-            } else {
-                return ObjectUtil.anyNull(value, limit, start, end) &&
-                    couponService.post(business, name, count, value, limit, start, end);
+                    couponComponent.delete(id);
+                    return true;
+                }
+            } else if (ObjectUtil.allNotNull(value, limit, start, end, type)) {
+                couponService.post(business, name, type, count, value, limit, start, end);
+                couponComponent.delete(id);
+                return true;
             }
         } else if (request.getApprove() == 0) {
             return couponComponent.update(id, (short) 1);
-        } else {
-            return false;
         }
+        return false;
     }
 
+    /* PASSED */
     @GetMapping("request/list")
-    @ApiOperation("Get a list of request to post coupon(s)")
+    @ApiOperation("Get a list of request to manage coupon(s)")
     @ApiResponse(description = "return a list of up to 10 requests, return empty if permission denied")
     public List<CouponRequest> requestList(
         @RequestParam("token") @ApiParam("token") String token,
@@ -143,6 +150,7 @@ public class CouponController {
         return couponComponent.query(page);
     }
 
+    /* PASSED */
     @PostMapping("remove/request")
     @ApiOperation("Remove specific amount of coupon(s)")
     @ApiResponse(description = "return true if request initiated")
@@ -150,19 +158,23 @@ public class CouponController {
         @RequestParam("token") @ApiParam(value = "token", required = true) String token,
         @RequestParam("business") @ApiParam(value = "business the coupon(s) belong to", required = true) String business,
         @RequestParam("name") @ApiParam(value = "coupon name", required = true) String name,
-        @RequestParam("count") @ApiParam("coupon count to remove, default: 0") Integer count) {
+        @RequestParam(value = "count", required = false) @ApiParam("coupon count to remove, remove whole if empty") Integer count) {
         Staff operator = findByToken(token, Staff.AUTH_SYS_ADMIN);
         if (operator == Staff.EMPTY) {
             return false;
         }
         Coupon coupon = couponService.find(business, name);
-        if (coupon == null || coupon.getRemain() < count) {
+        if (coupon == null) {
+            return false;
+        }
+        if (count != null && count > coupon.getRemain()) {
             return false;
         }
         coupon.setRemain(count);
         coupon.setTotal(count);
 
         CouponRequest request = new CouponRequest();
+        request.setInitiator(operator.getName());
         request.setCoupon(coupon);
         request.setCategory(CouponRequest.REMOVE);
         request.setApprove((short) 0);
@@ -170,6 +182,7 @@ public class CouponController {
         return true;
     }
 
+    /* PASSED */
     @PutMapping("remove/approve")
     @ApiOperation("Approve a request to remove coupons")
     @ApiResponse(description = "return true if approval success")
@@ -184,17 +197,20 @@ public class CouponController {
         if (request == null) {
             return false;
         }
-        if (request.getApprove() == 0 && !operator.beyond(Staff.AUTH_ADMIN)) {
+        if (request.getApprove() == 0) {
             couponComponent.update(id, (short) 1);
             return true;
         }
         if (request.getApprove() == 1 && operator.beyond(Staff.AUTH_ADMIN)) {
             Coupon coupon = request.getCoupon();
-            return couponService.remove(coupon.getBusiness(), coupon.getName(), coupon.getRemain());
+            couponService.remove(coupon.getBusiness(), coupon.getName(), coupon.getRemain());
+            couponComponent.delete(id);
+            return true;
         }
         return false;
     }
 
+    /* PASSED */
     @GetMapping("search")
     @ApiOperation("Get a list of request to remove coupon(s)")
     @ApiResponse(description = "return a list of up to 10 coupons, return empty if permission denied")
@@ -220,6 +236,7 @@ public class CouponController {
         return couponService.search(business, name, type, minValue, maxValue, minLimit, maxLimit, start, end, page);
     }
 
+    /* PASSED */
     @PutMapping("distribute")
     @ApiOperation("Notify distribution of a coupon")
     @ApiResponse(description = "return true if distribution valid")
@@ -231,10 +248,10 @@ public class CouponController {
         findByToken(token, Staff.AUTH_STAFF);
         Coupon coupon = couponService.find(business, name);
         if (coupon == null) {
-
+            return false;
         }
         if (coupon.getRemain() >= count) {
-            coupon.setRemain(coupon.getRemain() - count);
+            couponService.distribute(coupon.getBusiness(), coupon.getName(), count);
             return true;
         } else {
             return false;

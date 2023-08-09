@@ -43,7 +43,6 @@ public class StaffRequestComponent {
     }
 
     public StaffRequest get(String id) {
-        Object test = this.redisTemplate.opsForValue().get(id);
         return this.redisTemplate.opsForValue().get(id);
     }
 

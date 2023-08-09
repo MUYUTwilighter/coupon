@@ -2,12 +2,14 @@ package com.jd.coupon.service;
 
 import com.jd.coupon.entity.Staff;
 import com.sun.istack.NotNull;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author MUYU_Twilighter
  */
+@Service
 public interface StaffService {
     Staff find(@NotNull String username);
 

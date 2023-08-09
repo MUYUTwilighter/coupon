@@ -48,7 +48,7 @@ public class CouponRequestComponent {
 
     public List<CouponRequest> query(int page) {
         List<CouponRequest> list = new ArrayList<>(10);
-        ScanOptions.ScanOptionsBuilder builder = ScanOptions.scanOptions().count(100);
+        ScanOptions.ScanOptionsBuilder builder = ScanOptions.scanOptions().count(100).match("CR__*");
         try (Cursor<String> cursor = redisTemplate.scan(builder.build())) {
             int i = -1;
             while (cursor.hasNext()) {

@@ -4,6 +4,7 @@ import com.jd.coupon.dao.CouponDao;
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.key.CouponId;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Boolean post(@NotNull String business, @NotNull String name, @NotNull Integer count,
+    public Boolean post(@NotNull String business, @NotNull String name,
+                        @NotNull Short type, @NotNull Integer count,
                         @NotNull BigDecimal value, @NotNull BigDecimal limit,
                         @NotNull Date start, @NotNull Date end) {
         CouponId id = CouponId.of(business, name);
@@ -54,6 +56,7 @@ public class CouponServiceImpl implements CouponService {
             Coupon coupon = new Coupon();
             coupon.setBusiness(business);
             coupon.setName(name);
+            coupon.setType(type);
             coupon.setRemain(count);
             coupon.setTotal(count);
             coupon.setValue(value);
@@ -66,14 +69,33 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Boolean remove(@NotNull String business, @NotNull String name, @NotNull Integer count) {
+    public Boolean remove(@NotNull String business, @NotNull String name, @Nullable Integer count) {
+        CouponId id = CouponId.of(business, name);
+        Optional<Coupon> optional = couponDao.findById(id);
+        if (optional.isPresent()) {
+            Coupon coupon = optional.get();
+            if (count == null) {
+                couponDao.deleteById(id);
+            } else if (coupon.getRemain() >= count) {
+                coupon.setRemain(coupon.getRemain() - count);
+                coupon.setTotal(coupon.getTotal() - count);
+                couponDao.save(coupon);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* PASSED */
+    @Override
+    public Boolean distribute(@NotNull String business, @NotNull String name, @NotNull Integer count) {
         CouponId id = CouponId.of(business, name);
         Optional<Coupon> optional = couponDao.findById(id);
         if (optional.isPresent()) {
             Coupon coupon = optional.get();
             if (coupon.getRemain() >= count) {
                 coupon.setRemain(coupon.getRemain() - count);
-                coupon.setTotal(coupon.getTotal() - count);
+                couponDao.save(coupon);
                 return true;
             }
         }

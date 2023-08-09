@@ -4,6 +4,7 @@ import com.jd.coupon.dao.CouponDao;
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.key.CouponId;
 import com.sun.istack.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Optional;
  */
 @Service
 public class CouponServiceImpl implements CouponService {
+    @Autowired
     private CouponDao couponDao;
 
     @Override

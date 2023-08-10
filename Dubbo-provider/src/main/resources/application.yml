@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Dubbo-provicer
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+dubbo:
+  application:
+    name: dubbo-provicer  #dubbo的注册的服务名, 唯一性
+  registry:
+    address: zookeeper://ip:2181  #注册zookeeper的地址

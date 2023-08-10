@@ -21,7 +21,7 @@ public interface StaffService {
 
     Boolean register(@NotNull String name, @NotNull String pwd);
 
-    void destroy(@NotNull String name);
+    Boolean destroy(@NotNull String name);
 
     Staff find(@NotNull String name, @NotNull Short auth);
 }

@@ -3,6 +3,9 @@ package com.jd.coupon.controller;
 import com.jd.coupon.component.AuthComponent;
 import com.jd.coupon.component.StaffRequestComponent;
 import com.jd.coupon.entity.Staff;
+import com.jd.coupon.exception.BadArgumentException;
+import com.jd.coupon.exception.PermissionDenyException;
+import com.jd.coupon.exception.ResourceNotFoundException;
 import com.jd.coupon.request.StaffRequest;
 import com.jd.coupon.service.StaffService;
 import com.jd.coupon.util.ObjectUtil;
@@ -37,16 +40,13 @@ public class StaffController {
     @GetMapping("login")
     @ApiOperation("Log in server with username and password")
     public String login(
-        @RequestParam("name") @ApiParam("name") String name,
-        @RequestParam("pwd") @ApiParam("password") String pwd) {
-        if (ObjectUtil.anyNull(name, pwd)) {
-            return ARG_INVALID;
-        }
+        @RequestParam("name") @ApiParam(value = "name", required = true) String name,
+        @RequestParam("pwd") @ApiParam(value = "password", required = true) String pwd) {
         Boolean result = service.verify(name, pwd);
         if (result) {
             return authComponent.token(name);
         } else {
-            return INTERNAL_FAIL;
+            throw BadArgumentException.INSTANCE;
         }
     }
 
@@ -56,9 +56,6 @@ public class StaffController {
     public Boolean register(
         @RequestParam("name") @ApiParam(value = "username", required = true) String name,
         @RequestParam("pwd") @ApiParam(value = "password", required = true) String pwd) {
-        if (ObjectUtil.anyNull(name, pwd)) {
-            return false;
-        }
         return service.register(name, pwd);
     }
 
@@ -71,10 +68,10 @@ public class StaffController {
         Staff initiator = findByToken(token, Staff.AUTH_STAFF);
         Staff target = name == null ? initiator : service.find(name);
         if (target == Staff.EMPTY) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (initiator != target && !initiator.beyond(Staff.AUTH_ADMIN))  {
-            return false;
+            throw PermissionDenyException.INSTANCE;
         }
         StaffRequest request = StaffRequest.initDestroy(initiator.getName(), target);
         staffComponent.put(request);
@@ -87,17 +84,13 @@ public class StaffController {
     public Boolean destroyApprove(
         @RequestParam("token") @ApiParam("token") String token,
         @RequestParam("id") @ApiParam("request id") String id) {
-        Staff operator = findByToken(token, Staff.AUTH_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return false;
-        }
+        findByToken(token, Staff.AUTH_ADMIN);
         StaffRequest request = staffComponent.get(id);
         if (request == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         } else {
-            service.destroy(request.getTarget().getName());
             staffComponent.delete(id);
-            return true;
+            return service.destroy(request.getTarget().getName());
         }
     }
 
@@ -107,10 +100,7 @@ public class StaffController {
     public List<StaffRequest> requestList(
         @RequestParam("token") @ApiParam(value = "token", required = true) String token,
         @RequestParam(value = "page", defaultValue = "0") @ApiParam("list page") Integer page) {
-        Staff operator = findByToken(token, Staff.AUTH_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return new ArrayList<>();
-        }
+        findByToken(token, Staff.AUTH_ADMIN);
         return staffComponent.query(page);
     }
 
@@ -123,7 +113,7 @@ public class StaffController {
         @RequestParam("newPwd") @ApiParam("new password") String newPwd) {
         String username = authComponent.find(token);
         if (username == null) {
-            return false;
+            throw PermissionDenyException.INSTANCE;
         }
         if (service.verify(username, oldPwd)) {
             return service.modify(username, null, null, newPwd);
@@ -140,9 +130,6 @@ public class StaffController {
         @RequestParam(value = "auth", required = false) @ApiParam("authentication level") Short auth,
         @RequestParam(value = "business", required = false) @ApiParam("business the user belongs to") String business) {
         Staff operator = findByToken(token);
-        if (operator == Staff.EMPTY) {
-            return false;
-        }
         operator.setAuth(auth);
         operator.setBusiness(business);
         StaffRequest request = StaffRequest.initInfo(operator);
@@ -156,21 +143,17 @@ public class StaffController {
     public Boolean infoApprove(
         @RequestParam("token") @ApiParam("token") String token,
         @RequestParam("id") @ApiParam("request id") String id) {
-        Staff operator = findByToken(token, Staff.AUTH_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return false;
-        }
+        findByToken(token, Staff.AUTH_ADMIN);
         StaffRequest request = staffComponent.get(id);
         if (request == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         } else {
+            staffComponent.delete(id);
             Staff updated = request.getTarget();
             String name = updated.getName();
             String business = updated.getBusiness();
             Short auth = updated.getAuth();
-            service.modify(name, business, auth, null);
-            staffComponent.delete(id);
-            return true;
+            return service.modify(name, business, auth, null);
         }
     }
 
@@ -191,28 +174,33 @@ public class StaffController {
         @RequestParam(value = "name", defaultValue = "%") @ApiParam("username") String username,
         @RequestParam(value = "business", defaultValue = "%") @ApiParam("business") String business,
         @RequestParam(value = "page", defaultValue = "0") @ApiParam("page") Integer page) {
-        Staff operator = findByToken(token, Staff.AUTH_STAFF);
-        if (operator == Staff.EMPTY) {
-            return new ArrayList<>();
-        }
+        findByToken(token, Staff.AUTH_STAFF);
         return service.search(username, business, null, page);
     }
 
     private Staff findByToken(String token) {
         String name = authComponent.find(token);
         if (name == null) {
-            return Staff.EMPTY;
+            throw PermissionDenyException.INSTANCE;
         } else {
-            return service.find(name);
+            Staff staff = service.find(name);
+            if (staff == Staff.EMPTY) {
+                throw PermissionDenyException.INSTANCE;
+            }
+            return staff;
         }
     }
 
     private Staff findByToken(String token, Short auth) {
         String name = authComponent.find(token);
         if (name == null) {
-            return Staff.EMPTY;
+            throw PermissionDenyException.INSTANCE;
         } else {
-            return service.find(name, auth);
+            Staff staff = service.find(name, auth);
+            if (staff == Staff.EMPTY) {
+                throw PermissionDenyException.INSTANCE;
+            }
+            return staff;
         }
     }
 }

@@ -91,8 +91,9 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void destroy(@NotNull String name) {
+    public Boolean destroy(@NotNull String name) {
         this.staffDao.deleteById(name);
+        return true;
     }
 
     @Override

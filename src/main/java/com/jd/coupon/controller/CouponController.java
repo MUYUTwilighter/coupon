@@ -5,7 +5,9 @@ import com.jd.coupon.component.CouponRequestComponent;
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.entity.Staff;
 import com.jd.coupon.exception.BadArgumentException;
+import com.jd.coupon.exception.BadRequestException;
 import com.jd.coupon.exception.PermissionDenyException;
+import com.jd.coupon.exception.ResourceNotFoundException;
 import com.jd.coupon.request.CouponRequest;
 import com.jd.coupon.service.CouponService;
 import com.jd.coupon.service.StaffService;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -104,33 +105,39 @@ public class CouponController {
         }
         CouponRequest request = couponComponent.find(id);
         if (request == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (operator.beyond(Staff.AUTH_ADMIN) && request.getApprove() == 1) {
-            Coupon coupon = request.getCoupon();
-            String business = coupon.getBusiness();
-            String name = coupon.getName();
-            Short type = coupon.getType();
-            BigDecimal value = coupon.getValue();
-            BigDecimal limit = coupon.getLimitValue();
-            Date start = coupon.getStart();
-            Date end = coupon.getEnd();
-            Integer count = coupon.getRemain();
-            if (couponService.exists(business, name)) {
-                if (ObjectUtil.allNull(value, limit, start, end, type)) {
-                    couponService.post(business, name, count);
-                    couponComponent.delete(id);
-                    return true;
-                }
-            } else if (ObjectUtil.allNotNull(value, limit, start, end, type)) {
-                couponService.post(business, name, type, count, value, limit, start, end);
-                couponComponent.delete(id);
-                return true;
-            }
+            return executePost(id, request);
         } else if (request.getApprove() == 0) {
             return couponComponent.update(id, (short) 1);
+        } else {
+            throw BadRequestException.INSTANCE;
         }
-        return false;
+    }
+
+    private Boolean executePost(String id, CouponRequest request) {
+        Coupon coupon = request.getCoupon();
+        String business = coupon.getBusiness();
+        String name = coupon.getName();
+        Short type = coupon.getType();
+        BigDecimal value = coupon.getValue();
+        BigDecimal limit = coupon.getLimitValue();
+        Date start = coupon.getStart();
+        Date end = coupon.getEnd();
+        Integer count = coupon.getRemain();
+        if (couponService.exists(business, name)) {
+            if (ObjectUtil.allNull(value, limit, start, end, type)) {
+                couponComponent.delete(id);
+                return couponService.post(business, name, count);
+            }
+            throw BadArgumentException.INSTANCE;
+        } else if (ObjectUtil.allNotNull(value, limit, start, end, type)) {
+            couponComponent.delete(id);
+            return couponService.post(business, name, type, count, value, limit, start, end);
+        } else {
+            throw BadArgumentException.INSTANCE;
+        }
     }
 
     /* PASSED */
@@ -143,10 +150,7 @@ public class CouponController {
         @RequestParam(value = "name", required = false) @ApiParam("name of the coupon") String name,
         @RequestParam(value = "initiator", required = false) @ApiParam("name of initiator") String initiator,
         @RequestParam(value = "page", defaultValue = "0") @ApiParam("page switch") Integer page) {
-        Staff operator = findByToken(token, Staff.AUTH_SYS_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return new ArrayList<>();
-        }
+        findByToken(token, Staff.AUTH_SYS_ADMIN);
         return couponComponent.query(page);
     }
 
@@ -160,15 +164,12 @@ public class CouponController {
         @RequestParam("name") @ApiParam(value = "coupon name", required = true) String name,
         @RequestParam(value = "count", required = false) @ApiParam("coupon count to remove, remove whole if empty") Integer count) {
         Staff operator = findByToken(token, Staff.AUTH_SYS_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return false;
-        }
         Coupon coupon = couponService.find(business, name);
         if (coupon == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (count != null && count > coupon.getRemain()) {
-            return false;
+            throw BadArgumentException.INSTANCE;
         }
         coupon.setRemain(count);
         coupon.setTotal(count);
@@ -190,12 +191,9 @@ public class CouponController {
         @RequestParam("token") @ApiParam(value = "token", required = true) String token,
         @RequestParam("id") @ApiParam(value = "request id", required = true) String id) {
         Staff operator = findByToken(token, Staff.AUTH_SYS_ADMIN);
-        if (operator == Staff.EMPTY) {
-            return false;
-        }
         CouponRequest request = couponComponent.find(id);
         if (request == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (request.getApprove() == 0) {
             couponComponent.update(id, (short) 1);
@@ -203,11 +201,11 @@ public class CouponController {
         }
         if (request.getApprove() == 1 && operator.beyond(Staff.AUTH_ADMIN)) {
             Coupon coupon = request.getCoupon();
-            couponService.remove(coupon.getBusiness(), coupon.getName(), coupon.getRemain());
             couponComponent.delete(id);
-            return true;
+            return couponService.remove(coupon.getBusiness(), coupon.getName(), coupon.getRemain());
+        } else {
+            throw PermissionDenyException.INSTANCE;
         }
-        return false;
     }
 
     /* PASSED */
@@ -227,9 +225,6 @@ public class CouponController {
         @RequestParam(value = "end", defaultValue = "2100-1-1") @ApiParam("before when the coupon take effect") Date end,
         @RequestParam(value = "page", defaultValue = "0") @ApiParam("page switch") Integer page) {
         Staff operator = findByToken(token, Staff.AUTH_STAFF);
-        if (operator == Staff.EMPTY) {
-            return new ArrayList<>();
-        }
         if (!operator.beyond(Staff.AUTH_SYS_ADMIN)) {
             business = operator.getBusiness();
         }
@@ -248,13 +243,12 @@ public class CouponController {
         findByToken(token, Staff.AUTH_STAFF);
         Coupon coupon = couponService.find(business, name);
         if (coupon == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (coupon.getRemain() >= count) {
-            couponService.distribute(coupon.getBusiness(), coupon.getName(), count);
-            return true;
+            return couponService.distribute(coupon.getBusiness(), coupon.getName(), count);
         } else {
-            return false;
+            throw BadRequestException.INSTANCE;
         }
     }
 

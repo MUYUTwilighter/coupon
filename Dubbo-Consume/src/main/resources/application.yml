@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: Dubbo-Consume
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 8083
+  servlet:
+    context-path: /
+
+dubbo:
+  application:
+    name: dubbo-consume  #dubbo的注册的服务名, 唯一性
+  registry:
+    address: zookeeper://118.195.139.124:2181  #注册zookeeper的地址

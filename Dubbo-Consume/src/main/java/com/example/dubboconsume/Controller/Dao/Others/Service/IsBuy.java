@@ -1,6 +1,6 @@
 package com.example.dubboconsume.Controller.Dao.Others.Service;
 
-import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.stereotype.Service;
 
 @Service
 public class IsBuy {

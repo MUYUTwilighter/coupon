@@ -1,11 +1,11 @@
-package com.example.dubboprovider.exercise.serviceimpl;
+package com.example.dubboprovider.serviceimpl;
 
 
 //import com.exercise.Dao.CouponDao;
-import com.example.dubboprovider.exercise.Dao.CouponRecommendDao;
-import com.example.dubboprovider.exercise.entity.Coupon;
+import com.example.dubboprovider.Dao.CouponRecommendDao;
+import com.example.dubboprovider.entity.Coupon;
 //import com.exercise.mapper.CouponMapper;
-import com.example.dubboprovider.exercise.service.CouponRecommendService;
+import com.example.dubboprovider.service.CouponRecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

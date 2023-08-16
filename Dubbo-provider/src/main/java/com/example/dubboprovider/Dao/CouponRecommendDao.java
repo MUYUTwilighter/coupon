@@ -1,6 +1,6 @@
-package com.example.dubboprovider.exercise.Dao;
+package com.example.dubboprovider.Dao;
 
-import com.example.dubboprovider.exercise.entity.Coupon;
+import com.example.dubboprovider.entity.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

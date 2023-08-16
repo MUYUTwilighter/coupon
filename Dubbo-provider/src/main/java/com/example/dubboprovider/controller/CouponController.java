@@ -1,11 +1,10 @@
-package com.example.dubboprovider.exercise.controller;
+package com.example.dubboprovider.controller;
 
-import com.example.dubboprovider.exercise.entity.Coupon;
+import com.example.dubboprovider.entity.Coupon;
 //import com.exercise.service.CouponDistributionService;
 //import com.example.dubboprovider.exercise.service.CouponDistributionService;
-import com.example.dubboprovider.exercise.service.CouponRecommendService;
-import com.example.dubboprovider.exercise.service.CouponSyncService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.example.dubboprovider.service.CouponRecommendService;
+import com.example.dubboprovider.service.CouponSyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

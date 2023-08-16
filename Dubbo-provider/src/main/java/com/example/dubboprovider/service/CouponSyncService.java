@@ -1,4 +1,4 @@
-package com.example.dubboprovider.exercise.service;
+package com.example.dubboprovider.service;
 
 public interface CouponSyncService {
     void syncAndSaveCoupons();

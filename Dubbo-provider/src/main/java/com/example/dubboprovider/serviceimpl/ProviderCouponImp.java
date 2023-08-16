@@ -1,9 +1,9 @@
-package com.example.dubboprovider.exercise.serviceimpl;
+package com.example.dubboprovider.serviceimpl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.example.dubbointerface.ProviderCoupon;
-import com.example.dubboprovider.exercise.Dao.CouponDistributeDao;
-import com.example.dubboprovider.exercise.entity.RecommendCoupon;
+import com.example.dubboprovider.Dao.CouponDistributeDao;
+import com.example.dubboprovider.entity.RecommendCoupon;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

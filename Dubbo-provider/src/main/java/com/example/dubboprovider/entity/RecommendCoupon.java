@@ -1,4 +1,4 @@
-package com.example.dubboprovider.exercise.entity;
+package com.example.dubboprovider.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

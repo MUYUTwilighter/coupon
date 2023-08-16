@@ -29,11 +29,6 @@
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>0.2.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>Dubbo-Interface</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
 

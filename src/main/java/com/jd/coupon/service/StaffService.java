@@ -13,7 +13,7 @@ import java.util.List;
 public interface StaffService {
     Staff find(@NotNull String username);
 
-    List<Staff> search(String name, String business, Short auth, @NotNull int count);
+    List<Staff> search(String name, String business, Short auth, @NotNull Integer count);
 
     Boolean modify(@NotNull String name, String business, Short auth, String pwd);
 

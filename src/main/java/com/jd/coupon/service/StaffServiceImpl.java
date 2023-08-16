@@ -31,7 +31,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public List<Staff> search(String name, String business, Short auth, @NotNull int page) {
+    public List<Staff> search(String name, String business, Short auth, @NotNull Integer page) {
         name = name == null ? "%" : name;
         business = business == null ? "%" : business;
         List<Staff> results = staffDao.search(name, business, auth, page * 10);

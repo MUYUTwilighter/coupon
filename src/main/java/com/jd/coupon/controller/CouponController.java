@@ -231,7 +231,7 @@ public class CouponController {
         return couponService.search(business, name, type, minValue, maxValue, minLimit, maxLimit, start, end, page);
     }
 
-    /* PASSED */
+    /** REQUIRE CONCURRENT OPTIMIZE */
     @PutMapping("distribute")
     @ApiOperation("Notify distribution of a coupon")
     @ApiResponse(description = "return true if distribution valid")

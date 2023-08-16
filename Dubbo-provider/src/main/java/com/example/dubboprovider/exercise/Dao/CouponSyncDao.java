@@ -1,0 +1,9 @@
+package com.example.dubboprovider.exercise.Dao;
+
+import com.example.dubboprovider.exercise.entity.RecommendCoupon;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CouponSyncDao extends JpaRepository<RecommendCoupon, Long> {
+    RecommendCoupon findById(String id);
+
+}

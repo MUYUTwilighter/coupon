@@ -8,11 +8,11 @@
     <artifactId>test</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-<!--    <modules>-->
-<!--        <module>Dubbo-Interface</module>-->
-<!--        <module>Dubbo-Consume</module>-->
-<!--        <module>Dubbo-provider</module>-->
-<!--    </modules>-->
+    <modules>
+        <module>Dubbo-Interface</module>
+        <module>Dubbo-Consume</module>
+        <module>Dubbo-provider</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

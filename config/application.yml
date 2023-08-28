@@ -1,20 +1,14 @@
 server:
-  port: 8080
-
+  port: 8081
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/test?useUnicode=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost/coupon?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
-    password: 1234
-
+    password: zxy@AHU123
+  redis:
+    host: localhost
 dubbo:
-  application:
-    name: dubbo-provider
-  protocol:
-    name: dubbo
-    port: -1
   registry:
-    address: zookeeper://118.195.139.124:2181
-#    address: zookeeper://127.0.0.1:2181
-
+    address: localhost:2181
+  protocol:
+    port: 20880

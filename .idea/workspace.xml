@@ -4,43 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e37d989f-7892-434f-be4c-4607a5a87b1b" name="Changes" comment="1">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="42d4858b-9adc-443d-8bf7-dcce6f4161dc" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
-  </component>
-  <component name="ProjectId" id="2U2yq38mEPc64QxrQSAvnAPZDlf" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="2UHW8zi4PZQ8LNYSviilyQt0O92" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/2023暑假实习/coupon&quot;
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Documents\JavaProjects\coupon_distribute\distribute-service-provider\src\main\resources" />
+      <recent name="D:\Documents\JavaProjects\coupon_distribute\distribute-service-provider" />
+      <recent name="D:\Documents\JavaProjects\coupon_distribute" />
+      <recent name="D:\Documents\JavaProjects\coupon_distribute\src\main\resources" />
+    </key>
+  </component>
   <component name="RunManager">
-    <configuration name="DubboProviderApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.dubboprovider.DubboProviderApplication" />
-      <module name="Dubbo-provider" />
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.jd.coupon.distribute.Main" />
+      <module name="distribute-service-provider" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.example.dubboprovider.*" />
+          <option name="PATTERN" value="com.jd.coupon.distribute.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -50,70 +58,19 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DubboProviderApplication" />
+        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e37d989f-7892-434f-be4c-4607a5a87b1b" name="Changes" comment="" />
-      <created>1692152158897</created>
+      <changelist id="42d4858b-9adc-443d-8bf7-dcce6f4161dc" name="Changes" comment="" />
+      <created>1692596831393</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1692152158897</updated>
+      <updated>1692596831393</updated>
     </task>
-    <task id="LOCAL-00001" summary="1">
-      <created>1692153230982</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1692153230982</updated>
-    </task>
-    <task id="LOCAL-00002" summary="1">
-      <created>1692153986655</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1692153986655</updated>
-    </task>
-    <task id="LOCAL-00003" summary="1">
-      <created>1692154204888</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1692154204888</updated>
-    </task>
-    <task id="LOCAL-00004" summary="1">
-      <created>1692154351104</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1692154351104</updated>
-    </task>
-    <task id="LOCAL-00005" summary="1">
-      <created>1692672613210</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1692672613210</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
     <servers />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="1" />
-    <option name="LAST_COMMIT_MESSAGE" value="1" />
   </component>
 </project>

@@ -11,38 +11,38 @@ import java.sql.Date;
  */
 public interface CouponDto extends Serializable {
     @Id
-    @Column(length = 32)
+    @Column(name = "business", length = 32)
     String getBusiness();
 
     void setBusiness(String business);
 
     @Id
-    @Column(length = 32)
+    @Column(name = "name", length = 32)
     String getName();
 
     void setName(String name);
 
-    @Column
+    @Column(name = "type")
     Short getType();
 
     void setType(Short type);
 
-    @Column
+    @Column(name = "value")
     BigDecimal getValue();
 
     void setValue(BigDecimal value);
 
-    @Column
+    @Column(name = "limit_value")
     BigDecimal getLimitValue();
 
     void setLimitValue(BigDecimal limitValue);
 
-    @Column
+    @Column(name = "start")
     Date getStart();
 
     void setStart(Date start);
 
-    @Column
+    @Column(name = "end")
     Date getEnd();
 
     void setEnd(Date end);

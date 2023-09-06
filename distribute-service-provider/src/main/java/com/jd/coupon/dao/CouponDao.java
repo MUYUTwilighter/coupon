@@ -30,10 +30,10 @@ public interface CouponDao extends JpaRepository<Coupon, CouponId> {
             "   and remain > 0 " +
             "limit ?10, 10")
     List<Map<String, Object>> searchAvailable(@Nullable String business, @Nullable String name, @Nullable Short type,
-                                              @Nullable BigDecimal minValue, @Nullable BigDecimal maxValue,
-                                              @Nullable BigDecimal minLimit, @Nullable BigDecimal maxLimit,
-                                              @Nullable Date start, @Nullable Date end,
-                                              @NotNull Integer index);
+                              @Nullable BigDecimal minValue, @Nullable BigDecimal maxValue,
+                              @Nullable BigDecimal minLimit, @Nullable BigDecimal maxLimit,
+                              @Nullable Date start, @Nullable Date end,
+                              @NotNull Integer index);
 
     @Query(nativeQuery = true,
         value = "select c.business as business, c.name as name, c.end as end, c.limit_value as limitValue, " +
@@ -49,6 +49,6 @@ public interface CouponDao extends JpaRepository<Coupon, CouponId> {
             "order by i.relation DESC " +
             "limit ?5, 10")
     List<Map<String, Object>> searchInterest(@NotNull String hobby, @NotNull String job,
-                                             @Nullable Date start, @Nullable Date end,
-                                             @NotNull Integer index);
+                                   @Nullable Date start, @Nullable Date end,
+                                   @NotNull Integer index);
 }

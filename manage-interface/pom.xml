@@ -18,6 +18,7 @@
     </properties>
 
     <dependencies>
+        <!-- Internal modules-->
         <dependency>
             <groupId>com.jd.coupon</groupId>
             <artifactId>coupon-data</artifactId>

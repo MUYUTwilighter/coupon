@@ -20,7 +20,7 @@ public class Coupon implements CouponDto {
     @Column(length = 32)
     private String name;
     @Column
-    private Short type;
+    private Byte type;
     @Column
     private BigDecimal value;
     @Column
@@ -55,12 +55,12 @@ public class Coupon implements CouponDto {
     }
 
     @Override
-    public Short getType() {
+    public Byte getType() {
         return type;
     }
 
     @Override
-    public void setType(Short type) {
+    public void setType(Byte type) {
         this.type = type;
     }
 

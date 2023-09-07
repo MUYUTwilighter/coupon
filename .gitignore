@@ -3,4 +3,4 @@
 coupon.iml
 
 ### Server sensitive information ###
-config
+./config/*

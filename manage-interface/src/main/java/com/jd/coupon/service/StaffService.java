@@ -16,7 +16,9 @@ public interface StaffService {
 
     void register(@NotNull String initiator, @NotNull String name, @NotNull String pwd);
 
-    void verifyPwd(@NotNull String name, @NotNull String pwd);
+    void delete(@NotNull String initiator, @NotNull String name);
+
+    void login(@NotNull String name, @NotNull String pwd);
 
     void changePwd(@NotNull String name, @NotNull String pwd, @NotNull String newPwd);
 

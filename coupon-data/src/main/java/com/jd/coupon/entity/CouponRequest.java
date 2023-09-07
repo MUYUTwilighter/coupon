@@ -1,8 +1,11 @@
 package com.jd.coupon.entity;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 
 /**
  * @author MUYU_Twilighter
@@ -36,7 +39,7 @@ public class CouponRequest implements RequestDto {
     @Column(name = "coupon_name", length = 32)
     private String couponName;
     @Column(name = "coupon_type")
-    private Short couponType;
+    private Byte couponType;
     @Column(name = "coupon_value")
     private BigDecimal couponValue;
     @Column(name = "coupon_limit_value")
@@ -124,11 +127,11 @@ public class CouponRequest implements RequestDto {
         this.couponName = couponName;
     }
 
-    public Short getCouponType() {
+    public Byte getCouponType() {
         return couponType;
     }
 
-    public void setCouponType(Short couponType) {
+    public void setCouponType(Byte couponType) {
         this.couponType = couponType;
     }
 
@@ -184,5 +187,77 @@ public class CouponRequest implements RequestDto {
         coupon.setStart(getCouponStart());
         coupon.setEnd(getCouponEnd());
         return coupon;
+    }
+
+    public static CouponRequest initCreate(@NotNull String initiator,
+                                           @NotNull String couponBusiness,
+                                           @NotNull String couponName,
+                                           @NotNull Byte type,
+                                           @NotNull BigDecimal couponValue,
+                                           @NotNull BigDecimal couponLimitValue,
+                                           @NotNull Integer couponCount,
+                                           @NotNull Date couponStart,
+                                           @NotNull Date couponEnd) {
+        CouponRequest request = new CouponRequest();
+        request.setCategory(CATE_CREATE);
+        request.setInitiate(Date.valueOf(LocalDate.now()));
+        request.setInitiator(initiator);
+        request.setRejected(false);
+        request.setApproval(APPR_TWICE);
+        request.setCouponBusiness(couponBusiness);
+        request.setCouponName(couponName);
+        request.setCouponType(type);
+        request.setCouponValue(couponValue);
+        request.setCouponLimitValue(couponLimitValue);
+        request.setCouponCount(couponCount);
+        request.setCouponStart(couponStart);
+        request.setCouponEnd(couponEnd);
+        return request;
+    }
+
+    public static CouponRequest initDelete(@NotNull String initiator,
+                                           @NotNull String couponBusiness,
+                                           @NotNull String couponName) {
+        CouponRequest request = new CouponRequest();
+        request.setCategory(CATE_DELETE);
+        request.setInitiate(Date.valueOf(LocalDate.now()));
+        request.setInitiator(initiator);
+        request.setRejected(false);
+        request.setApproval(APPR_TWICE);
+        request.setCouponBusiness(couponBusiness);
+        request.setCouponName(couponName);
+        return request;
+    }
+
+    public static CouponRequest initPost(@NotNull String initiator,
+                                         @NotNull String couponBusiness,
+                                         @NotNull String couponName,
+                                         @NotNull Integer couponCount) {
+        CouponRequest request = new CouponRequest();
+        request.setCategory(CATE_POST);
+        request.setInitiate(Date.valueOf(LocalDate.now()));
+        request.setInitiator(initiator);
+        request.setRejected(false);
+        request.setApproval(APPR_TWICE);
+        request.setCouponBusiness(couponBusiness);
+        request.setCouponName(couponName);
+        request.setCouponCount(couponCount);
+        return request;
+    }
+
+    public static CouponRequest initWithdraw(@NotNull String initiator,
+                                             @NotNull String couponBusiness,
+                                             @NotNull String couponName,
+                                             @NotNull Integer couponCount) {
+        CouponRequest request = new CouponRequest();
+        request.setCategory(CATE_WITHDRAW);
+        request.setInitiate(Date.valueOf(LocalDate.now()));
+        request.setInitiator(initiator);
+        request.setRejected(false);
+        request.setApproval(APPR_TWICE);
+        request.setCouponBusiness(couponBusiness);
+        request.setCouponName(couponName);
+        request.setCouponCount(couponCount);
+        return request;
     }
 }

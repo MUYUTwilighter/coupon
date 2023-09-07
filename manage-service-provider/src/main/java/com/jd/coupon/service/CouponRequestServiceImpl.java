@@ -4,22 +4,25 @@ import com.jd.coupon.dao.CouponDao;
 import com.jd.coupon.dao.CouponRequestDao;
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.entity.CouponRequest;
-import com.jd.coupon.entity.RequestDto;
-import com.jd.coupon.entity.StaffRequest;
 import com.jd.coupon.key.CouponId;
-import com.jd.coupon.util.Executor;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 /**
  * @author MUYU_Twilighter
  */
-public class CouponRequestServiceImpl {
+@DubboService
+@Component
+public class CouponRequestServiceImpl implements CouponRequestService {
     private final Map<Byte, Predicate<CouponRequest>> executorMap = new HashMap<>();
     @Autowired
     private CouponDao couponDao;
@@ -56,7 +59,13 @@ public class CouponRequestServiceImpl {
         });
     }
 
-    public Boolean approve(@NotNull Byte auth, @NotNull Long id) {
+    @Override
+    public CouponRequest find(Long id) {
+        return couponRequestDao.find(id);
+    }
+
+    @Override
+    public Boolean approve(@NotNull Long id, @NotNull Byte auth) {
         CouponRequest request = couponRequestDao.find(id);
         if (request == null) {
             return false;
@@ -70,5 +79,22 @@ public class CouponRequestServiceImpl {
             return predicate.test(request);
         }
         return true;
+    }
+
+    @Override
+    public void withdraw(@NotNull Long id) {
+        this.couponRequestDao.deleteById(id);
+    }
+
+    @Override
+    public List<CouponRequest> search(@Nullable Byte category,
+                                      @Nullable Date start,
+                                      @Nullable Date end,
+                                      @Nullable String initiator,
+                                      @Nullable Boolean rejected,
+                                      @Nullable Byte nextApprove,
+                                      @Nullable Integer page) {
+        page = page == null || page < 0 ? 0 : page;
+        return this.couponRequestDao.search(category, start, end, initiator, rejected, nextApprove, page * 10);
     }
 }

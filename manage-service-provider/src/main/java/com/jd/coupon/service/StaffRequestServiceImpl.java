@@ -1,18 +1,21 @@
 package com.jd.coupon.service;
 
-import com.jd.coupon.dao.CouponDao;
-import com.jd.coupon.dao.CouponRequestDao;
 import com.jd.coupon.dao.StaffDao;
 import com.jd.coupon.dao.StaffRequestDao;
-import com.jd.coupon.entity.*;
-import com.jd.coupon.key.CouponId;
-import com.jd.coupon.util.Executor;
+import com.jd.coupon.entity.Staff;
+import com.jd.coupon.entity.StaffRequest;
+import com.jd.coupon.entity.StaffRequestDto;
+import com.jd.coupon.exception.PermissionDenyException;
+import com.jd.coupon.exception.ResourceNotFoundException;
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -21,16 +24,12 @@ import java.util.function.Predicate;
  */
 @DubboService
 @Component
-public class StaffRequestServiceImpl {
+public class StaffRequestServiceImpl implements StaffRequestService {
     private final Map<Byte, Predicate<StaffRequest>> executorMap = new HashMap<>();
     @Autowired
     private StaffRequestDao staffRequestDao;
     @Autowired
     private StaffDao staffDao;
-    @Autowired
-    private CouponRequestDao couponRequestDao;
-    @Autowired
-    private CouponDao couponDao;
 
     public StaffRequestServiceImpl() {
         executorMap.put(StaffRequest.CATE_REGISTER, request -> {
@@ -60,13 +59,19 @@ public class StaffRequestServiceImpl {
         });
     }
 
-    public Boolean approve(@NotNull Byte auth, @NotNull Long id) {
+    @Override
+    public StaffRequestDto find(Long id) {
+        return staffRequestDao.find(id);
+    }
+
+    @Override
+    public Boolean approve(@NotNull Long id, @NotNull Byte auth) {
         StaffRequest request = staffRequestDao.find(id);
         if (request == null) {
-            return false;
+            throw ResourceNotFoundException.INSTANCE;
         }
         if (!request.nextApproval().equals(auth)) {
-            return false;
+            throw PermissionDenyException.INSTANCE;
         }
         request.rollApproval();
         if (request.nextApproval() == 0) {
@@ -74,5 +79,22 @@ public class StaffRequestServiceImpl {
             return predicate.test(request);
         }
         return true;
+    }
+
+    @Override
+    public void withdraw(@NotNull Long id) {
+        this.staffRequestDao.deleteById(id);
+    }
+
+    @Override
+    public List<StaffRequestDto> search(@Nullable Byte category,
+                                        @Nullable Date start,
+                                        @Nullable Date end,
+                                        @Nullable String initiator,
+                                        @Nullable Boolean rejected,
+                                        @Nullable Byte nextApprove,
+                                        @Nullable Integer page) {
+        page = page == null || page < 0 ? 0 : page;
+        return this.staffRequestDao.search(category, start, end, initiator, rejected, nextApprove, page * 10);
     }
 }

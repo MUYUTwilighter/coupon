@@ -30,6 +30,10 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public StaffDto info(@NotNull String name) {
+        StaffDto staff = staffDao.findHidden(name);
+        if (staff == null) {
+            throw ResourceNotFoundException.INSTANCE;
+        }
         return staffDao.findHidden(name);
     }
 
@@ -54,13 +58,14 @@ public class StaffServiceImpl implements StaffService {
         staffRequestDao.save(request);
     }
 
+    @Override
     public void delete(@NotNull String initiator, @NotNull String name) {
         StaffRequest request = StaffRequest.initDelete(initiator, name);
         staffRequestDao.save(request);
     }
 
     @Override
-    public void verifyPwd(@NotNull String name, @NotNull String pwd) {
+    public void login(@NotNull String name, @NotNull String pwd) {
         Staff staff = staffDao.find(name);
         if (staff == null) {
             throw ResourceNotFoundException.INSTANCE;

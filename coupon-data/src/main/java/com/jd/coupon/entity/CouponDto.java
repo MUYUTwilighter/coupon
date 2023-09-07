@@ -23,9 +23,9 @@ public interface CouponDto extends Serializable {
     void setName(String name);
 
     @Column(name = "type")
-    Short getType();
+    Byte getType();
 
-    void setType(Short type);
+    void setType(Byte type);
 
     @Column(name = "value")
     BigDecimal getValue();

@@ -15,11 +15,11 @@ import java.util.Map;
  */
 public interface StaffDao extends JpaRepository<Staff, String> {
     @Query(nativeQuery = true,
-    value = "select * from staff " +
-        "where (?1 is null or name like ?1)" +
-        "   and (?2 is null or business like ?2)" +
-        "   and (?3 is null or auth = ?3) " +
-        "limit ?4, 10")
+        value = "select * from staff " +
+            "where (?1 is null or name like ?1)" +
+            "   and (?2 is null or business like ?2)" +
+            "   and (?3 is null or auth = ?3) " +
+            "limit ?4, 10")
     List<Staff> search(@Nullable String name,
                        @Nullable String business,
                        @Nullable Short auth,
@@ -32,14 +32,14 @@ public interface StaffDao extends JpaRepository<Staff, String> {
             "   and (?3 is null or auth = ?3) " +
             "limit ?4, 10")
     List<Map<String, Object>> searchHiddenMap(@Nullable String name,
-                                           @Nullable String business,
-                                           @Nullable Short auth,
-                                           @NotNull Integer index);
+                                              @Nullable String business,
+                                              @Nullable Short auth,
+                                              @NotNull Integer index);
 
     default List<StaffDto> searchHidden(@Nullable String name,
-                                               @Nullable String business,
-                                               @Nullable Short auth,
-                                               @NotNull Integer index) {
+                                        @Nullable String business,
+                                        @Nullable Short auth,
+                                        @NotNull Integer index) {
         List<Map<String, Object>> maps = this.searchHiddenMap(name, business, auth, index);
         return parse(maps);
     }
@@ -51,6 +51,14 @@ public interface StaffDao extends JpaRepository<Staff, String> {
     @Query(nativeQuery = true,
         value = "select name, business, auth from staff where name = ?1")
     Map<String, Object> findHiddenMap(@NotNull String name);
+
+    @Query(nativeQuery = true,
+        value = "update staff set business = ?2 where name = name")
+    void updateBus(@NotNull String name, @NotNull String business);
+
+    @Query(nativeQuery = true,
+        value = "update staff set auth = ?2 where name = name")
+    void updateAuth(@NotNull String name, @NotNull Byte auth);
 
     default StaffDto findHidden(@NotNull String name) {
         Map<String, Object> map = findHiddenMap(name);

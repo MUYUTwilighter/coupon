@@ -28,4 +28,17 @@ public interface CouponDao extends JpaRepository<Coupon, CouponId> {
                         @NotNull BigDecimal minLimit, @NotNull BigDecimal maxLimit,
                         @NotNull Date start, @NotNull Date end,
                         @NotNull Integer index);
+
+    @Query(nativeQuery = true,
+        value = "update coupon " +
+            "set remain = remain + ?3, total = total + ?3 " +
+            "where business = ?1 and name = ?2")
+    void post(@NotNull String business, @NotNull String name, @NotNull Integer count);
+
+    @Query(nativeQuery = true,
+        value = "update coupon " +
+            "set remain = remain - ?3, total = total - ?3 " +
+            "where business = ?1 and name = ?2" +
+            "   and remain >= count")
+    void withdraw(@NotNull String business, @NotNull String name, @NotNull Integer count);
 }

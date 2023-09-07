@@ -10,10 +10,10 @@ import java.sql.Date;
 @Entity
 @Table(name = "coupon_request")
 public class CouponRequest implements RequestDto {
-    public static Byte CATE_CREATE = 0x00;
-    public static Byte CATE_DELETE = 0x01;
-    public static Byte CATE_POST = 0x02;
-    public static Byte CATE_WITHDRAW = 0x03;
+    public static Byte CATE_CREATE = 0x10;
+    public static Byte CATE_DELETE = 0x11;
+    public static Byte CATE_POST = 0x12;
+    public static Byte CATE_WITHDRAW = 0x13;
 
     @Id
     @Column(name = "id")
@@ -69,7 +69,7 @@ public class CouponRequest implements RequestDto {
     }
 
     @Override
-    public Boolean isRejected() {
+    public Boolean getRejected() {
         return rejected;
     }
 

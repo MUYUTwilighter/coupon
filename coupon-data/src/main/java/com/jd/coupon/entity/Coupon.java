@@ -119,4 +119,8 @@ public class Coupon implements CouponDto {
     public void setTotal(Integer total) {
         this.total = total;
     }
+
+    public CouponId extractId() {
+        return CouponId.of(business, name);
+    }
 }

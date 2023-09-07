@@ -4,7 +4,10 @@ import com.jd.coupon.entity.StaffDto;
 import com.jd.coupon.exception.ResourceNotFoundException;
 import com.jd.coupon.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author MUYU_Twilighter
@@ -25,7 +28,10 @@ public class StaffController {
     }
 
     @PostMapping("register")
-    public Boolean register() {
-        return true;
+    public void register(HttpServletRequest request) {
+        String initiator = request.getParameter("initiator");
+        String name = request.getParameter("name");
+        String pwd = request.getParameter("pwd");
+        staffService.register(initiator, name, pwd);
     }
 }

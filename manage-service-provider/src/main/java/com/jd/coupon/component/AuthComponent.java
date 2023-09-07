@@ -1,5 +1,6 @@
 package com.jd.coupon.component;
 
+import com.jd.coupon.entity.StaffDto;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -13,22 +14,22 @@ import java.util.Calendar;
 @Component
 public class AuthComponent {
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, StaffDto> redisTemplate;
 
-    public String token(String username) {
-        String token = RandomString.make(16);
+    public String putAndToken(StaffDto staff) {
+        String token = RandomString.make(12);
         token = "AU__" + token;
-        this.redisTemplate.opsForValue().set(token, username);
+        this.redisTemplate.opsForValue().set(token, staff);
         this.extend(token);
         return token;
     }
 
-    public String find(String token) {
-        String username = this.redisTemplate.opsForValue().get(token);
-        if (username != null) {
+    public StaffDto find(String token) {
+        StaffDto staff = this.redisTemplate.opsForValue().get(token);
+        if (staff != null) {
             this.extend(token);
         }
-        return username;
+        return staff;
     }
 
     private void extend(String key) {

@@ -23,7 +23,7 @@ public class Staff implements StaffDto {
 
     @Id
     @Column(length = 32)
-    private String name;
+    private String name = "default";
     @Column(length = 32)
     private String pwd;
     @Column

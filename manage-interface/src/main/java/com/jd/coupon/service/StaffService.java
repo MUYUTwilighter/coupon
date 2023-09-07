@@ -14,13 +14,13 @@ public interface StaffService {
                           @Nullable Short auth,
                           @Nullable Integer page);
 
-    Boolean register(@NotNull String name, @NotNull String pwd);
+    void register(@NotNull String initiator, @NotNull String name, @NotNull String pwd);
 
-    Boolean verifyPwd(@NotNull String name, @NotNull String pwd);
+    void verifyPwd(@NotNull String name, @NotNull String pwd);
 
-    Boolean changePwd(@NotNull String name, @NotNull String pwd, @NotNull String newPwd);
+    void changePwd(@NotNull String name, @NotNull String pwd, @NotNull String newPwd);
 
-    Boolean changeBusiness(@NotNull String name, @NotNull String newBusiness);
+    Boolean changeBusiness(@NotNull String initiator, @NotNull String name, @NotNull String newBusiness);
 
-    Boolean changeAuth(@NotNull String name, @NotNull Byte newAuth);
+    Boolean changeAuth(@NotNull String initiator, @NotNull String name, @NotNull Byte newAuth);
 }

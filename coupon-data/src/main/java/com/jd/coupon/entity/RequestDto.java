@@ -1,13 +1,16 @@
 package com.jd.coupon.entity;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * @author MUYU_Twilighter
  */
-public interface RequestDto {
+public interface RequestDto extends Serializable {
     Long APPR_TWICE = (Staff.AUTH_ADMIN.longValue() << 8) | Staff.AUTH_SYS_ADMIN;
     Long APPR_ONCE = Staff.AUTH_ADMIN.longValue();
 
@@ -25,7 +28,7 @@ public interface RequestDto {
     String getInitiator();
 
     @Column(name = "rejected")
-    Boolean isRejected();
+    Boolean getRejected();
 
     @Column(name = "approved")
     Long getApproval();
@@ -46,15 +49,10 @@ public interface RequestDto {
         return (byte) (this.getApproval() & 0xFF);
     }
 
-    default Boolean rollApproval(Byte auth) {
-        if (this.nextApproval().equals(auth)) {
-            Long approval = this.getApproval();
-            approval >>>= 8;
-            setApproval(approval);
-            return true;
-        } else {
-            return false;
-        }
+    default void rollApproval() {
+        Long approval = this.getApproval();
+        approval >>>= 8;
+        setApproval(approval);
     }
 
     default Boolean hasApproved() {

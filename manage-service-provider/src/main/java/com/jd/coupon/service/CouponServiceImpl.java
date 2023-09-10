@@ -41,6 +41,7 @@ public class CouponServiceImpl implements CouponService {
                                @Nullable Integer total,
                                @Nullable Date start,
                                @Nullable Date end,
+                               @Nullable Long usableCate,
                                @Nullable Integer page) {
         page = page == null || page < 0 ? 0 : page;
         return couponDao.search(business, name, type, minValue, maxValue, minLimit, maxLimit, remain, total, start, end, page);
@@ -55,8 +56,9 @@ public class CouponServiceImpl implements CouponService {
                        @NotNull BigDecimal limitValue,
                        @NotNull Integer count,
                        @NotNull Date start,
-                       @NotNull Date end) {
-        CouponRequest request = CouponRequest.initCreate(initiator, business, name, type, value, limitValue, count, start, end);
+                       @NotNull Date end,
+                       @NotNull Long usableCate) {
+        CouponRequest request = CouponRequest.initCreate(initiator, business, name, type, value, limitValue, count, start, end, usableCate);
         couponRequestDao.save(request);
     }
 

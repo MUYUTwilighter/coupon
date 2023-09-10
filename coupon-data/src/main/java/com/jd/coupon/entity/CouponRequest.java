@@ -50,6 +50,8 @@ public class CouponRequest implements RequestDto {
     private Date couponEnd;
     @Column(name = "coupon_count")
     private Integer couponCount;
+    @Column(name = "coupon_usable_cate")
+    private Long couponUsableCate;
 
     @Override
     public Long getId() {
@@ -175,6 +177,14 @@ public class CouponRequest implements RequestDto {
         this.couponCount = couponCount;
     }
 
+    public Long getCouponUsableCate() {
+        return couponUsableCate;
+    }
+
+    public void setCouponUsableCate(Long couponUsableCate) {
+        this.couponUsableCate = couponUsableCate;
+    }
+
     public Coupon extractCoupon() {
         Coupon coupon = new Coupon();
         coupon.setBusiness(getCouponBusiness());
@@ -186,6 +196,7 @@ public class CouponRequest implements RequestDto {
         coupon.setTotal(getCouponCount());
         coupon.setStart(getCouponStart());
         coupon.setEnd(getCouponEnd());
+        coupon.setUsableCate(getCouponUsableCate());
         return coupon;
     }
 
@@ -197,7 +208,8 @@ public class CouponRequest implements RequestDto {
                                            @NotNull BigDecimal couponLimitValue,
                                            @NotNull Integer couponCount,
                                            @NotNull Date couponStart,
-                                           @NotNull Date couponEnd) {
+                                           @NotNull Date couponEnd,
+                                           @NotNull Long couponUsableCate) {
         CouponRequest request = new CouponRequest();
         request.setCategory(CATE_CREATE);
         request.setInitiate(Date.valueOf(LocalDate.now()));
@@ -212,6 +224,7 @@ public class CouponRequest implements RequestDto {
         request.setCouponCount(couponCount);
         request.setCouponStart(couponStart);
         request.setCouponEnd(couponEnd);
+        request.setCouponUsableCate(couponUsableCate);
         return request;
     }
 

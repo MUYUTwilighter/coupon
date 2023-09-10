@@ -2,10 +2,8 @@ package com.jd.coupon.controller;
 
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.entity.CouponRequest;
-import com.jd.coupon.entity.StaffRequestDto;
 import com.jd.coupon.service.CouponRequestService;
 import com.jd.coupon.service.CouponService;
-import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,20 +22,21 @@ public class CouponController {
     private CouponService couponService;
 
     @GetMapping("search")
-    public List<Coupon> search(@RequestParam(required = false) String business,
-                               @RequestParam(required = false) String name,
-                               @RequestParam(required = false) Byte type,
-                               @RequestParam(required = false) BigDecimal minValue,
-                               @RequestParam(required = false) BigDecimal maxValue,
-                               @RequestParam(required = false) BigDecimal minLimitValue,
-                               @RequestParam(required = false) BigDecimal maxLimitValue,
-                               @RequestParam(required = false) Integer remain,
-                               @RequestParam(required = false) Integer total,
-                               @RequestParam(required = false) Date start,
-                               @RequestParam(required = false) Date end,
-                               @RequestParam(required = false) Integer page) {
+    public List<Coupon> search(@RequestParam(value = "business", required = false) String business,
+                               @RequestParam(value = "name", required = false) String name,
+                               @RequestParam(value = "type", required = false) Byte type,
+                               @RequestParam(value = "min_value", required = false) BigDecimal minValue,
+                               @RequestParam(value = "max_value", required = false) BigDecimal maxValue,
+                               @RequestParam(value = "min_limit_value", required = false) BigDecimal minLimitValue,
+                               @RequestParam(value = "max_limit_value", required = false) BigDecimal maxLimitValue,
+                               @RequestParam(value = "remain", required = false) Integer remain,
+                               @RequestParam(value = "total", required = false) Integer total,
+                               @RequestParam(value = "start", required = false) Date start,
+                               @RequestParam(value = "end", required = false) Date end,
+                               @RequestParam(value = "usable_cate", required = false) Long usableCate,
+                               @RequestParam(value = "page", required = false) Integer page) {
         return couponService.search(business, name, type, minValue, maxValue, minLimitValue, maxLimitValue,
-            remain, total, start, end, page);
+            remain, total, start, end, usableCate, page);
     }
 
     @RestController
@@ -55,9 +54,10 @@ public class CouponController {
                            @RequestParam BigDecimal limitValue,
                            @RequestParam Integer count,
                            @RequestParam Date start,
-                           @RequestParam Date end) {
+                           @RequestParam Date end,
+                           @RequestParam Long usableCate) {
             this.couponService.create(initiator, business, name, type, value, limitValue,
-                count, start, end);
+                count, start, end, usableCate);
         }
 
         @PostMapping("delete")
@@ -91,29 +91,29 @@ public class CouponController {
         private CouponRequestService couponRequestService;
 
         @GetMapping("search")
-        public List<CouponRequest> search(@RequestParam(required = false) Byte category,
-                                            @RequestParam(required = false) Date start,
-                                            @RequestParam(required = false) Date end,
-                                            @RequestParam(required = false) String initiator,
-                                            @RequestParam(required = false) Boolean rejected,
-                                            @RequestParam(required = false) Byte nextApprove,
-                                            @RequestParam(required = false) Integer page) {
+        public List<CouponRequest> search(@RequestParam(value = "category", required = false) Byte category,
+                                          @RequestParam(value = "start", required = false) Date start,
+                                          @RequestParam(value = "end", required = false) Date end,
+                                          @RequestParam(value = "initiator", required = false) String initiator,
+                                          @RequestParam(value = "rejected", required = false) Boolean rejected,
+                                          @RequestParam(value = "next_approve", required = false) Byte nextApprove,
+                                          @RequestParam(value = "page", required = false) Integer page) {
             return couponRequestService.search(category, start, end, initiator, rejected, nextApprove, page);
         }
 
         @GetMapping("pending/{name}")
         public List<CouponRequest> searchSelf(@PathVariable(name = "name") String name,
-                                              @RequestParam(required = false) Byte category,
-                                              @RequestParam(required = false) Date start,
-                                              @RequestParam(required = false) Date end,
-                                              @RequestParam(required = false) Boolean rejected,
-                                              @RequestParam(required = false) Byte nextApprove,
-                                              @RequestParam(required = false) Integer page) {
+                                              @RequestParam(value = "category", required = false) Byte category,
+                                              @RequestParam(value = "start", required = false) Date start,
+                                              @RequestParam(value = "end", required = false) Date end,
+                                              @RequestParam(value = "rejected", required = false) Boolean rejected,
+                                              @RequestParam(value = "next_approve", required = false) Byte nextApprove,
+                                              @RequestParam(value = "page", required = false) Integer page) {
             return couponRequestService.search(category, start, end, name, rejected, nextApprove, page);
         }
 
         @GetMapping("{id}")
-        public CouponRequest find(@PathVariable(name = "id") Long id) {
+        public CouponRequest find(@PathVariable(value = "id") Long id) {
             return couponRequestService.find(id);
         }
 

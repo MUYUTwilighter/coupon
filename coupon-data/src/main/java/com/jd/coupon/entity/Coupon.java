@@ -14,25 +14,27 @@ import java.sql.Date;
 @IdClass(CouponId.class)
 public class Coupon implements CouponDto {
     @Id
-    @Column(length = 32)
+    @Column(name = "business", length = 32)
     private String business;
     @Id
-    @Column(length = 32)
+    @Column(name = "name", length = 32)
     private String name;
-    @Column
+    @Column(name = "type")
     private Byte type;
-    @Column
+    @Column(name = "value")
     private BigDecimal value;
-    @Column
+    @Column(name = "limit_value")
     private BigDecimal limitValue;
-    @Column
+    @Column(name = "remain")
     private Integer remain;
-    @Column
+    @Column(name = "total")
     private Integer total;
-    @Column
+    @Column(name = "start")
     private Date start;
-    @Column
+    @Column(name = "end")
     private Date end;
+    @Column(name = "usable_cate")
+    private Long usableCate;
 
     @Override
     public String getBusiness() {
@@ -120,7 +122,11 @@ public class Coupon implements CouponDto {
         this.total = total;
     }
 
-    public CouponId extractId() {
-        return CouponId.of(business, name);
+    public Long getUsableCate() {
+        return usableCate;
+    }
+
+    public void setUsableCate(Long usableCate) {
+        this.usableCate = usableCate;
     }
 }

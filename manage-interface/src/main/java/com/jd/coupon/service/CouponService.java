@@ -20,6 +20,7 @@ public interface CouponService {
                         @Nullable Integer total,
                         @Nullable Date start,
                         @Nullable Date end,
+                        @Nullable Long usableCate,
                         @Nullable Integer page);
 
     void create(@NotNull String initiator,
@@ -30,7 +31,8 @@ public interface CouponService {
                 @NotNull BigDecimal limitValue,
                 @NotNull Integer count,
                 @NotNull Date start,
-                @NotNull Date end);
+                @NotNull Date end,
+                @NotNull Long usableCate);
 
     void delete(@NotNull String initiator,
                 @NotNull String business,

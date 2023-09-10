@@ -1,5 +1,7 @@
 package com.jd.coupon.entity;
 
+import com.jd.coupon.key.CouponId;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -46,4 +48,16 @@ public interface CouponDto extends Serializable {
     Date getEnd();
 
     void setEnd(Date end);
+
+    Long getUsableCate();
+
+    void setUsableCate(Long usableCate);
+
+    default Boolean isUsableFor(Long productCate) {
+        return (this.getUsableCate() & productCate) != 0;
+    }
+
+    default CouponId extractId() {
+        return CouponId.of(this.getBusiness(), this.getName());
+    }
 }

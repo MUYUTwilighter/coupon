@@ -1,6 +1,6 @@
 package com.jd.coupon.controller;
 
-import com.jd.coupon.entity.CouponDto;
+import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.service.DistributeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +20,9 @@ public class DistributeController {
     private DistributeService service;
 
     @GetMapping("interest")
-    public synchronized List<CouponDto> distributeInterest(
+    public synchronized List<Coupon> distributeInterest(
         @RequestParam("hobby") String hobby,
         @RequestParam("job") String job) {
-        return null;
+        return service.distributeInterest(hobby, job, 10);
     }
 }

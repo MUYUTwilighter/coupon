@@ -1,7 +1,6 @@
 package com.jd.coupon.dao;
 
 import com.jd.coupon.entity.Coupon;
-import com.jd.coupon.entity.CouponDto;
 import com.jd.coupon.key.CouponId;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author MUYU_Twilighter

@@ -21,6 +21,7 @@ public class DistributeServiceImpl implements DistributeService {
     @Autowired
     CouponDao dao;
 
+    @Override
     public synchronized List<Coupon> distributeInterest(@NotNull String hobby, @NotNull String job, @Nullable Integer count) {
         count = (count == null || count < 0 || count > 10) ? 1 : count;
         Date now = Date.valueOf(LocalDate.now());

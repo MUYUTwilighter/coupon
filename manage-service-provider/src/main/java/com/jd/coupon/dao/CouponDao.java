@@ -29,12 +29,14 @@ public interface CouponDao extends JpaRepository<Coupon, CouponId> {
             "   and (?9 is null or total >= ?9) " +
             "   and (?10 is null or end >= ?10) " +
             "   and (?11 is null or start <= ?11) " +
-            "limit ?12, 10")
+            "   and (?12 is null or (usable_cate & ?12) = ?12) " +
+            "limit ?13, 10")
     List<Coupon> search(@Nullable String business, @Nullable String name, @Nullable Byte type,
                         @Nullable BigDecimal minValue, @Nullable BigDecimal maxValue,
                         @Nullable BigDecimal minLimit, @Nullable BigDecimal maxLimit,
                         @Nullable Integer remain, @Nullable Integer total,
                         @Nullable Date start, @Nullable Date end,
+                        @Nullable Long usableCate,
                         @NotNull Integer index);
 
     @Query(nativeQuery = true,

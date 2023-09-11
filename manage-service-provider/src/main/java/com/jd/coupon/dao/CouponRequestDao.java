@@ -29,10 +29,10 @@ public interface CouponRequestDao extends JpaRepository<CouponRequest, Long> {
             "   and (?6 is null or approval & 0xFF = ?6) " +
             "limit ?7, 10")
     List<CouponRequest> search(@Nullable Byte category,
-                                        @Nullable Date start,
-                                        @Nullable Date end,
-                                        @Nullable String initiator,
-                                        @Nullable Boolean rejected,
-                                        @Nullable Byte nextApproval,
-                                        @NotNull Integer index);
+                               @Nullable Date start,
+                               @Nullable Date end,
+                               @Nullable String initiator,
+                               @Nullable Boolean rejected,
+                               @Nullable Byte nextApproval,
+                               @NotNull Integer index);
 }

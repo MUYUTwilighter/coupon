@@ -44,7 +44,7 @@ public class CouponServiceImpl implements CouponService {
                                @Nullable Long usableCate,
                                @Nullable Integer page) {
         page = page == null || page < 0 ? 0 : page;
-        return couponDao.search(business, name, type, minValue, maxValue, minLimit, maxLimit, remain, total, start, end, page);
+        return couponDao.search(business, name, type, minValue, maxValue, minLimit, maxLimit, remain, total, start, end, usableCate, page);
     }
 
     @Override

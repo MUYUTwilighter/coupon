@@ -19,20 +19,10 @@ public class DistributeController {
     @Autowired
     private DistributeService service;
 
-    @GetMapping("available")
-    public List<CouponDto> searchAvailable(
-        @RequestParam(value = "business", required = false) String business,
-        @RequestParam(value = "page", required = false) Integer page
-    ) {
-        return service.searchAvailable(business, page);
-    }
-
     @GetMapping("interest")
-    public List<CouponDto> searchInterest(
+    public synchronized List<CouponDto> distributeInterest(
         @RequestParam("hobby") String hobby,
-        @RequestParam("job") String job,
-        @RequestParam(value = "page", required = false) Integer page
-    ) {
-        return service.searchInterest(hobby, job, page);
+        @RequestParam("job") String job) {
+        return null;
     }
 }

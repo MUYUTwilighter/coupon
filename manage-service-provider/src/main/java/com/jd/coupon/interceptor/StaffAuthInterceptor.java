@@ -1,17 +1,13 @@
 package com.jd.coupon.interceptor;
 
 import com.jd.coupon.component.AuthComponent;
-import com.jd.coupon.dao.StaffDao;
 import com.jd.coupon.entity.Staff;
 import com.jd.coupon.entity.StaffDto;
-import com.jd.coupon.service.StaffService;
 import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import reactor.util.annotation.NonNullApi;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -54,14 +50,13 @@ public class StaffAuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (this.target == null) {
-            if (initiator.beyond(auth)) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return true;
-            }
-        } else {
+        if (initiator.beyond(auth)) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return true;
+        }
+        if (this.target != null) {
             String target = request.getParameter(this.target);
-            if (initiator.beyond(Staff.AUTH_COMMON) && initiator.getName().equals(target)) {
+            if (initiator.beyond(Staff.AUTH_STAFF) && initiator.getName().equals(target)) {
                 return true;
             }
         }

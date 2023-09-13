@@ -1,7 +1,6 @@
 package com.jd.coupon.dao;
 
 import com.jd.coupon.entity.CouponRequest;
-import com.jd.coupon.entity.RequestDto;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author MUYU_Twilighter

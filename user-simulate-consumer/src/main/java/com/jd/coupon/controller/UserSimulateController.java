@@ -1,6 +1,5 @@
 package com.jd.coupon.controller;
 
-import com.jd.coupon.service.CouponService;
 import com.jd.coupon.service.DistributeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,17 +19,11 @@ public class UserSimulateController {
 
     @Reference
     private DistributeService distributeService;
-    @Reference
-    private CouponService couponService;
 
     public void testDistribute(@RequestParam(value = "hobby", required = false) String hobby,
                                @RequestParam(value = "job", required = false) String job,
                                @RequestParam(value = "batch") Integer batch,
-                               @RequestParam(value = "batch_size") Integer batchSize,
-                               @RequestParam(value = "samples") Integer samples) {
-        logger.info("Initializing interest data");
-
-
+                               @RequestParam(value = "batch_size") Integer batchSize) {
         long cost = 0L, begin, end;
         for (int i = 0; i < batch; ++i) {
             begin = Date.valueOf(LocalDate.now()).getTime();

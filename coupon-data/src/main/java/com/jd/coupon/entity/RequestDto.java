@@ -44,18 +44,4 @@ public interface RequestDto extends Serializable {
     void setRejected(Boolean rejected);
 
     void setApproval(Long approval);
-
-    default Byte nextApproval() {
-        return (byte) (this.getApproval() & 0xFF);
-    }
-
-    default void rollApproval() {
-        Long approval = this.getApproval();
-        approval >>>= 8;
-        setApproval(approval);
-    }
-
-    default Boolean hasApproved() {
-        return this.getApproval() == 0;
-    }
 }

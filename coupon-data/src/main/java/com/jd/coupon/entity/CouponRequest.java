@@ -1,6 +1,8 @@
 package com.jd.coupon.entity;
 
+import com.jd.coupon.util.RequestUtil;
 import com.sun.istack.NotNull;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,14 +12,10 @@ import java.time.LocalDate;
 /**
  * @author MUYU_Twilighter
  */
+@Data
 @Entity
 @Table(name = "coupon_request")
-public class CouponRequest implements RequestDto {
-    public static Byte CATE_CREATE = 0x10;
-    public static Byte CATE_DELETE = 0x11;
-    public static Byte CATE_POST = 0x12;
-    public static Byte CATE_WITHDRAW = 0x13;
-
+public class CouponRequest {
     @Id
     @Column(name = "id")
     @GeneratedValue
@@ -28,8 +26,7 @@ public class CouponRequest implements RequestDto {
     private Date initiate;
     @ManyToOne
     @JoinColumn(name = "initiator", referencedColumnName = "name")
-    @JoinTable(name = "staff")
-    private String initiator;
+    private Staff initiator;
     @Column(name = "rejected")
     private Boolean rejected;
     @Column(name = "approval")
@@ -53,136 +50,12 @@ public class CouponRequest implements RequestDto {
     @Column(name = "coupon_usable_cate")
     private Long couponUsableCate;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public Byte getCategory() {
-        return category;
-    }
-
-    @Override
-    public Date getInitiate() {
-        return initiate;
-    }
-
-    @Override
     public String getInitiator() {
-        return initiator;
+        return this.initiator.getName();
     }
 
-    @Override
-    public Boolean getRejected() {
-        return rejected;
-    }
-
-    @Override
-    public Long getApproval() {
-        return approval;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public void setCategory(Byte category) {
-        this.category = category;
-    }
-
-    @Override
-    public void setInitiate(Date initiate) {
-        this.initiate = initiate;
-    }
-
-    @Override
     public void setInitiator(String initiator) {
-        this.initiator = initiator;
-    }
-
-    @Override
-    public void setRejected(Boolean rejected) {
-        this.rejected = rejected;
-    }
-
-    @Override
-    public void setApproval(Long approval) {
-        this.approval = approval;
-    }
-
-    public String getCouponBusiness() {
-        return this.couponBusiness;
-    }
-
-    public void setCouponBusiness(String couponBusiness) {
-        this.couponBusiness = couponBusiness;
-    }
-
-    public String getCouponName() {
-        return this.couponName;
-    }
-
-    public void setCouponName(String couponName) {
-        this.couponName = couponName;
-    }
-
-    public Byte getCouponType() {
-        return couponType;
-    }
-
-    public void setCouponType(Byte couponType) {
-        this.couponType = couponType;
-    }
-
-    public BigDecimal getCouponValue() {
-        return couponValue;
-    }
-
-    public void setCouponValue(BigDecimal couponValue) {
-        this.couponValue = couponValue;
-    }
-
-    public BigDecimal getCouponLimitValue() {
-        return couponLimitValue;
-    }
-
-    public void setCouponLimitValue(BigDecimal couponLimitValue) {
-        this.couponLimitValue = couponLimitValue;
-    }
-
-    public Date getCouponStart() {
-        return couponStart;
-    }
-
-    public void setCouponStart(Date couponStart) {
-        this.couponStart = couponStart;
-    }
-
-    public Date getCouponEnd() {
-        return couponEnd;
-    }
-
-    public void setCouponEnd(Date couponEnd) {
-        this.couponEnd = couponEnd;
-    }
-
-    public Integer getCouponCount() {
-        return couponCount;
-    }
-
-    public void setCouponCount(Integer couponCount) {
-        this.couponCount = couponCount;
-    }
-
-    public Long getCouponUsableCate() {
-        return couponUsableCate;
-    }
-
-    public void setCouponUsableCate(Long couponUsableCate) {
-        this.couponUsableCate = couponUsableCate;
+        this.initiator.setName(initiator);
     }
 
     public Coupon extractCoupon() {
@@ -211,11 +84,11 @@ public class CouponRequest implements RequestDto {
                                            @NotNull Date couponEnd,
                                            @NotNull Long couponUsableCate) {
         CouponRequest request = new CouponRequest();
-        request.setCategory(CATE_CREATE);
+        request.setCategory(RequestUtil.CATE_COUPON_CREATE);
         request.setInitiate(Date.valueOf(LocalDate.now()));
         request.setInitiator(initiator);
         request.setRejected(false);
-        request.setApproval(APPR_TWICE);
+        request.setApproval(RequestUtil.APPR_TWICE);
         request.setCouponBusiness(couponBusiness);
         request.setCouponName(couponName);
         request.setCouponType(type);
@@ -232,11 +105,11 @@ public class CouponRequest implements RequestDto {
                                            @NotNull String couponBusiness,
                                            @NotNull String couponName) {
         CouponRequest request = new CouponRequest();
-        request.setCategory(CATE_DELETE);
+        request.setCategory(RequestUtil.CATE_STAFF_DELETE);
         request.setInitiate(Date.valueOf(LocalDate.now()));
         request.setInitiator(initiator);
         request.setRejected(false);
-        request.setApproval(APPR_TWICE);
+        request.setApproval(RequestUtil.APPR_TWICE);
         request.setCouponBusiness(couponBusiness);
         request.setCouponName(couponName);
         return request;
@@ -247,11 +120,11 @@ public class CouponRequest implements RequestDto {
                                          @NotNull String couponName,
                                          @NotNull Integer couponCount) {
         CouponRequest request = new CouponRequest();
-        request.setCategory(CATE_POST);
+        request.setCategory(RequestUtil.CATE_COUPON_POST);
         request.setInitiate(Date.valueOf(LocalDate.now()));
         request.setInitiator(initiator);
         request.setRejected(false);
-        request.setApproval(APPR_TWICE);
+        request.setApproval(RequestUtil.APPR_TWICE);
         request.setCouponBusiness(couponBusiness);
         request.setCouponName(couponName);
         request.setCouponCount(couponCount);
@@ -263,14 +136,28 @@ public class CouponRequest implements RequestDto {
                                              @NotNull String couponName,
                                              @NotNull Integer couponCount) {
         CouponRequest request = new CouponRequest();
-        request.setCategory(CATE_WITHDRAW);
+        request.setCategory(RequestUtil.CATE_COUPON_WITHDRAW);
         request.setInitiate(Date.valueOf(LocalDate.now()));
         request.setInitiator(initiator);
         request.setRejected(false);
-        request.setApproval(APPR_TWICE);
+        request.setApproval(RequestUtil.APPR_TWICE);
         request.setCouponBusiness(couponBusiness);
         request.setCouponName(couponName);
         request.setCouponCount(couponCount);
         return request;
+    }
+
+    public Byte nextApproval() {
+        return (byte) (this.getApproval() & 0xFF);
+    }
+
+    public void rollApproval() {
+        Long approval = this.getApproval();
+        approval >>>= 8;
+        setApproval(approval);
+    }
+
+    public Boolean hasApproved() {
+        return this.getApproval() == 0;
     }
 }

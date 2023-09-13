@@ -22,6 +22,7 @@
         <module>distribute-interface</module>
         <module>recommend-interface</module>
         <module>manage-interface</module>
+        <module>user-simulate-consumer</module>
     </modules>
 
     <properties>

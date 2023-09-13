@@ -5,6 +5,7 @@ import com.jd.coupon.dao.CouponRequestDao;
 import com.jd.coupon.entity.Coupon;
 import com.jd.coupon.entity.CouponRequest;
 import com.jd.coupon.key.CouponId;
+import com.jd.coupon.util.RequestUtil;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -30,7 +31,7 @@ public class CouponRequestServiceImpl implements CouponRequestService {
     private CouponRequestDao couponRequestDao;
 
     public CouponRequestServiceImpl() {
-        executorMap.put(CouponRequest.CATE_CREATE, request -> {
+        executorMap.put(RequestUtil.CATE_COUPON_CREATE, request -> {
             Coupon coupon = request.extractCoupon();
             if (couponDao.existsById(coupon.extractId())) {
                 return false;
@@ -38,19 +39,19 @@ public class CouponRequestServiceImpl implements CouponRequestService {
             couponDao.save(coupon);
             return true;
         });
-        executorMap.put(CouponRequest.CATE_DELETE, request -> {
+        executorMap.put(RequestUtil.CATE_COUPON_DELETE, request -> {
             CouponId id = request.extractCoupon().extractId();
             couponDao.deleteById(id);
             return true;
         });
-        executorMap.put(CouponRequest.CATE_POST, request -> {
+        executorMap.put(RequestUtil.CATE_COUPON_POST, request -> {
             String business = request.getCouponBusiness();
             String name = request.getCouponName();
             Integer count = request.getCouponCount();
             couponDao.post(business, name, count);
             return true;
         });
-        executorMap.put(CouponRequest.CATE_WITHDRAW, request -> {
+        executorMap.put(RequestUtil.CATE_COUPON_WITHDRAW, request -> {
             String business = request.getCouponBusiness();
             String name = request.getCouponName();
             Integer count = request.getCouponCount();

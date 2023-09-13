@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>recommend-service-provider</artifactId>
+    <artifactId>user-simulate-consumer</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,32 +18,32 @@
     </properties>
 
     <dependencies>
+        <!-- Internal Modules -->
+        <dependency>
+            <groupId>com.jd.coupon</groupId>
+            <artifactId>distribute-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jd.coupon</groupId>
+            <artifactId>manage-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.jd.coupon</groupId>
             <artifactId>recommend-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Dubbo -->
+        <!-- Spring bases -->
         <dependency>
-            <groupId>org.apache.dubbo</groupId>
-            <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>3.2.5</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-            <version>5.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-recipes</artifactId>
-            <version>5.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-x-discovery</artifactId>
-            <version>5.5.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

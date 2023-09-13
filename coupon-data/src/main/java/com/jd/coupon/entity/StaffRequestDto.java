@@ -1,47 +1,55 @@
 package com.jd.coupon.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import lombok.Data;
+
+import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author MUYU_Twilighter
  */
-public interface StaffRequestDto extends RequestDto {
-    @Override
-    @Id
-    @Column(name = "id")
-    Long getId();
+@Data
+public class StaffRequestDto implements Serializable {
+    private Long id;
+    private Byte category;
+    private Date initiate = Date.valueOf(LocalDate.now());
+    private Staff initiator;
+    private Boolean rejected;
+    private Long approval;
+    private String staffName;
+    private String staffBusiness;
+    private Byte staffAuth;
 
-    @Override
-    @Column(name = "category")
-    Byte getCategory();
+    public String getInitiator() {
+        return this.initiator.getName();
+    }
 
-    @Override
-    @Column(name = "initiate")
-    Date getInitiate();
+    public void setInitiator(String initiator) {
+        this.initiator.setName(initiator);
+    }
 
-    @Override
-    @Column(name = "initiator")
-    String getInitiator();
+    public static StaffRequestDto of(StaffRequest request) {
+        StaffRequestDto requestDto = new StaffRequestDto();
+        requestDto.setId(request.getId());
+        requestDto.setCategory(request.getCategory());
+        requestDto.setInitiate(request.getInitiate());
+        requestDto.setInitiator(request.getInitiator());
+        requestDto.setRejected(request.getRejected());
+        requestDto.setApproval(request.getApproval());
+        requestDto.setStaffName(request.getStaffName());
+        requestDto.setStaffAuth(requestDto.getStaffAuth());
+        return requestDto;
+    }
 
-    @Override
-    @Column(name = "rejected")
-    Boolean getRejected();
-
-    @Override
-    @Column(name = "approved")
-    Long getApproval();
-
-    String getStaffName();
-
-    void setStaffName(String staffName);
-
-    String getStaffBusiness();
-
-    void setStaffBusiness(String staffBusiness);
-
-    Byte getStaffAuth();
-
-    void setStaffAuth(Byte staffAuth);
+    public static List<StaffRequestDto> of(Iterable<StaffRequest> requests) {
+        List<StaffRequestDto> requestDtos = new LinkedList<>();
+        for (StaffRequest request : requests) {
+            StaffRequestDto requestDto = StaffRequestDto.of(request);
+            requestDtos.add(requestDto);
+        }
+        return requestDtos;
+    }
 }

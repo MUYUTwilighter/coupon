@@ -6,7 +6,6 @@ import com.jd.coupon.entity.StaffDto;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Nonnull;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpSession;
 /**
  * @author MUYU_Twilighter
  */
-@Component
 public class StaffAuthInterceptor implements HandlerInterceptor {
     private final Byte auth;
     private final String target;
@@ -50,13 +48,13 @@ public class StaffAuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (initiator.beyond(auth)) {
+        if (initiator.hasAuth(auth)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return true;
         }
         if (this.target != null) {
             String target = request.getParameter(this.target);
-            if (initiator.beyond(Staff.AUTH_STAFF) && initiator.getName().equals(target)) {
+            if (initiator.hasAuth(Staff.AUTH_STAFF) && initiator.getName().equals(target)) {
                 return true;
             }
         }

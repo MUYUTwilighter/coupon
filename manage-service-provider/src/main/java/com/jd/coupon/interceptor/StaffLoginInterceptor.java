@@ -5,7 +5,6 @@ import com.jd.coupon.dao.StaffDao;
 import com.jd.coupon.entity.StaffDto;
 import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -30,7 +29,7 @@ public class StaffLoginInterceptor implements HandlerInterceptor {
                                 @Nullable Exception ex) {
         String name = request.getParameter("name");
         if (ex != null) {
-            StaffDto staff = staffDao.find(name);
+            StaffDto staff = staffDao.findHidden(name);
             HttpSession session = request.getSession();
             String token = authComponent.putAndToken(staff);
             session.setAttribute("token", token);

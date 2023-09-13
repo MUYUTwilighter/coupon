@@ -7,6 +7,7 @@ import com.jd.coupon.entity.StaffRequest;
 import com.jd.coupon.entity.StaffRequestDto;
 import com.jd.coupon.exception.PermissionDenyException;
 import com.jd.coupon.exception.ResourceNotFoundException;
+import com.jd.coupon.util.RequestUtil;
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -32,7 +33,7 @@ public class StaffRequestServiceImpl implements StaffRequestService {
     private StaffDao staffDao;
 
     public StaffRequestServiceImpl() {
-        executorMap.put(StaffRequest.CATE_REGISTER, request -> {
+        executorMap.put(RequestUtil.CATE_STAFF_REGISTER, request -> {
             Staff staff = request.extractStaff();
             if (staffDao.existsById(staff.getName())) {
                 return false;
@@ -40,18 +41,18 @@ public class StaffRequestServiceImpl implements StaffRequestService {
             staffDao.save(staff);
             return true;
         });
-        executorMap.put(StaffRequest.CATE_DELETE, request -> {
+        executorMap.put(RequestUtil.CATE_STAFF_DELETE, request -> {
             String name = request.getStaffName();
             staffDao.deleteById(name);
             return true;
         });
-        executorMap.put(StaffRequest.CATE_CHANGE_BUS, request -> {
+        executorMap.put(RequestUtil.CATE_STAFF_CHANGE_BUS, request -> {
             String name = request.getStaffName();
             String business = request.getStaffBusiness();
             staffDao.updateBus(name, business);
             return true;
         });
-        executorMap.put(StaffRequest.CATE_CHANGE_AUTH, request -> {
+        executorMap.put(RequestUtil.CATE_STAFF_CHANGE_AUTH, request -> {
             String name = request.getStaffName();
             Byte auth = request.getStaffAuth();
             staffDao.updateAuth(name, auth);
@@ -61,7 +62,7 @@ public class StaffRequestServiceImpl implements StaffRequestService {
 
     @Override
     public StaffRequestDto find(Long id) {
-        return staffRequestDao.find(id);
+        return staffRequestDao.findHidden(id);
     }
 
     @Override
@@ -95,6 +96,6 @@ public class StaffRequestServiceImpl implements StaffRequestService {
                                         @Nullable Byte nextApprove,
                                         @Nullable Integer page) {
         page = page == null || page < 0 ? 0 : page;
-        return this.staffRequestDao.search(category, start, end, initiator, rejected, nextApprove, page * 10);
+        return this.staffRequestDao.searchHidden(category, start, end, initiator, rejected, nextApprove, page * 10);
     }
 }

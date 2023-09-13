@@ -1,22 +1,21 @@
 package com.jd.coupon.entity;
 
+import com.jd.coupon.util.RequestUtil;
 import com.sun.istack.NotNull;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 
 /**
  * @author MUYU_Twilighter
  */
+@Data
 @Entity
 @Table(name = "staff_request")
-public class StaffRequest implements StaffRequestDto {
-    public static Byte CATE_REGISTER = 0x00;
-    public static Byte CATE_DELETE = 0x01;
-    public static Byte CATE_CHANGE_BUS = 0x02;
-    public static Byte CATE_CHANGE_AUTH = 0x03;
-
+public class StaffRequest implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue
@@ -27,8 +26,7 @@ public class StaffRequest implements StaffRequestDto {
     private Date initiate = Date.valueOf(LocalDate.now());
     @ManyToOne
     @JoinColumn(name = "initiator", referencedColumnName = "name")
-    @JoinTable(name = "staff")
-    private String initiator;
+    private Staff initiator;
     @Column(name = "rejected")
     private Boolean rejected;
     @Column(name = "approval")
@@ -42,102 +40,12 @@ public class StaffRequest implements StaffRequestDto {
     @Column(name = "staff_pwd", length = 32)
     private String staffPwd;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Byte getCategory() {
-        return category;
-    }
-
-    @Override
-    public void setCategory(Byte category) {
-        this.category = category;
-    }
-
-    @Override
-    public Date getInitiate() {
-        return initiate;
-    }
-
-    @Override
-    public void setInitiate(Date initiate) {
-        this.initiate = initiate;
-    }
-
-    @Override
     public String getInitiator() {
-        return initiator;
+        return initiator.getName();
     }
 
-    @Override
     public void setInitiator(String initiator) {
-        this.initiator = initiator;
-    }
-
-    @Override
-    public Boolean getRejected() {
-        return rejected;
-    }
-
-    @Override
-    public void setRejected(Boolean rejected) {
-        this.rejected = rejected;
-    }
-
-    @Override
-    public Long getApproval() {
-        return approval;
-    }
-
-    @Override
-    public void setApproval(Long approval) {
-        this.approval = approval;
-    }
-
-    @Override
-    public String getStaffName() {
-        return staffName;
-    }
-
-    @Override
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
-    }
-
-    @Override
-    public String getStaffBusiness() {
-        return staffBusiness;
-    }
-
-    @Override
-    public void setStaffBusiness(String staffBusiness) {
-        this.staffBusiness = staffBusiness;
-    }
-
-    @Override
-    public Byte getStaffAuth() {
-        return staffAuth;
-    }
-
-    @Override
-    public void setStaffAuth(Byte staffAuth) {
-        this.staffAuth = staffAuth;
-    }
-
-    public String getStaffPwd() {
-        return staffPwd;
-    }
-
-    public void setStaffPwd(String staffPwd) {
-        this.staffPwd = staffPwd;
+        this.initiator.setName(initiator);
     }
 
     public Staff extractStaff() {
@@ -153,9 +61,9 @@ public class StaffRequest implements StaffRequestDto {
                                      @NotNull String staffName,
                                      @NotNull String staffPwd) {
         StaffRequest request = new StaffRequest();
-        request.setCategory(CATE_REGISTER);
+        request.setCategory(RequestUtil.CATE_STAFF_REGISTER);
         request.setInitiator(initiator);
-        request.setApproval(APPR_ONCE);
+        request.setApproval(RequestUtil.APPR_ONCE);
         request.setStaffName(staffName);
         request.setStaffPwd(staffPwd);
         return request;
@@ -163,18 +71,18 @@ public class StaffRequest implements StaffRequestDto {
 
     public static StaffRequest initDelete(@NotNull String initiator, @NotNull String staffName) {
         StaffRequest request = new StaffRequest();
-        request.setCategory(CATE_DELETE);
+        request.setCategory(RequestUtil.CATE_STAFF_DELETE);
         request.setInitiator(initiator);
-        request.setApproval(APPR_ONCE);
+        request.setApproval(RequestUtil.APPR_ONCE);
         request.setStaffName(staffName);
         return request;
     }
 
     public static StaffRequest initChangeBus(@NotNull String initiator, @NotNull String staffName, @NotNull String staffBusiness) {
         StaffRequest request = new StaffRequest();
-        request.setCategory(CATE_CHANGE_BUS);
+        request.setCategory(RequestUtil.CATE_STAFF_CHANGE_BUS);
         request.setInitiator(initiator);
-        request.setApproval(APPR_ONCE);
+        request.setApproval(RequestUtil.APPR_ONCE);
         request.setStaffName(staffName);
         request.setStaffBusiness(staffBusiness);
         return request;
@@ -182,11 +90,25 @@ public class StaffRequest implements StaffRequestDto {
 
     public static StaffRequest initChangeAuth(@NotNull String initiator, @NotNull String staffName, @NotNull Byte staffAuth) {
         StaffRequest request = new StaffRequest();
-        request.setCategory(CATE_CHANGE_AUTH);
+        request.setCategory(RequestUtil.CATE_STAFF_CHANGE_AUTH);
         request.setInitiator(initiator);
-        request.setApproval(APPR_ONCE);
+        request.setApproval(RequestUtil.APPR_ONCE);
         request.setStaffName(staffName);
         request.setStaffAuth(staffAuth);
         return request;
+    }
+
+    public Byte nextApproval() {
+        return (byte) (this.getApproval() & 0xFF);
+    }
+
+    public void rollApproval() {
+        Long approval = this.getApproval();
+        approval >>>= 8;
+        setApproval(approval);
+    }
+
+    public Boolean hasApproved() {
+        return this.getApproval() == 0;
     }
 }

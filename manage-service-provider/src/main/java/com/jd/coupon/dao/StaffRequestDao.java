@@ -1,6 +1,5 @@
 package com.jd.coupon.dao;
 
-import com.jd.coupon.entity.RequestDto;
 import com.jd.coupon.entity.StaffRequest;
 import com.jd.coupon.entity.StaffRequestDto;
 import com.sun.istack.NotNull;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author MUYU_Twilighter
@@ -19,6 +17,11 @@ public interface StaffRequestDao extends JpaRepository<StaffRequest, Long> {
     @Query(nativeQuery = true,
         value = "select * from staff_request where id = ?1")
     StaffRequest find(@NotNull Long id);
+
+    default StaffRequestDto findHidden(@NotNull Long id) {
+        StaffRequest request = find(id);
+        return StaffRequestDto.of(request);
+    }
 
     @Query(nativeQuery = true, value =
         "select * from staff_request " +
@@ -29,22 +32,23 @@ public interface StaffRequestDao extends JpaRepository<StaffRequest, Long> {
             "   and (?5 is null or rejected = ?5)" +
             "   and (?6 is null or approval & 0xFF = ?6) " +
             "limit ?7, 10")
-    List<Map<String, Object>> searchMap(@Nullable Byte category,
-                                     @Nullable Date start,
-                                     @Nullable Date end,
-                                     @Nullable String initiator,
-                                     @Nullable Boolean rejected,
-                                     @Nullable Byte nextApproval,
-                                     @NotNull Integer index);
+    List<StaffRequest> search(@Nullable Byte category,
+                              @Nullable Date start,
+                              @Nullable Date end,
+                              @Nullable String initiator,
+                              @Nullable Boolean rejected,
+                              @Nullable Byte nextApproval,
+                              @NotNull Integer index);
 
 
-    default List<StaffRequestDto> search(@Nullable Byte category,
-                                         @Nullable Date start,
-                                         @Nullable Date end,
-                                         @Nullable String initiator,
-                                         @Nullable Boolean rejected,
-                                         @Nullable Byte nextApproval,
-                                         @NotNull Integer index) {
-        return (List<StaffRequestDto>) (Object) this.searchMap(category, start, end, initiator, rejected, nextApproval, index);
+    default List<StaffRequestDto> searchHidden(@Nullable Byte category,
+                                               @Nullable Date start,
+                                               @Nullable Date end,
+                                               @Nullable String initiator,
+                                               @Nullable Boolean rejected,
+                                               @Nullable Byte nextApproval,
+                                               @NotNull Integer index) {
+        List<StaffRequest> requests = search(category, start, end, initiator, rejected, nextApproval, index);
+        return StaffRequestDto.of(requests);
     }
 }

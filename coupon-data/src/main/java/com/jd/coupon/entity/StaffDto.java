@@ -1,29 +1,42 @@
 package com.jd.coupon.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import java.io.Serializable;
+import lombok.Data;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author MUYU_Twilighter
  */
-public interface StaffDto extends Serializable {
-    @Id
-    @Column(name = "name", length = 32)
-    String getName();
+@Data
+public class StaffDto {
+    private String name = "default";
+    private Byte auth;
+    private String business;
 
-    @Column(name = "auth")
-    Byte getAuth();
-
-    @Column(name = "business")
-    String getBusiness();
-
-    default Boolean beyond(Byte auth) {
+    public Boolean hasAuth(Byte auth) {
         Byte authThis = this.getAuth();
         if (authThis == null) {
             return false;
         } else {
             return auth == null || authThis >= auth;
         }
+    }
+
+    public static StaffDto of(Staff staff) {
+        StaffDto staffDto = new StaffDto();
+        staffDto.setName(staff.getName());
+        staffDto.setAuth(staff.getAuth());
+        staffDto.setBusiness(staff.getBusiness());
+        return staffDto;
+    }
+
+    public static List<StaffDto> of(Iterable<Staff> staffs) {
+        List<StaffDto> staffDtos = new LinkedList<>();
+        for (Staff staff : staffs) {
+            StaffDto staffDto = StaffDto.of(staff);
+            staffDtos.add(staffDto);
+        }
+        return staffDtos;
     }
 }

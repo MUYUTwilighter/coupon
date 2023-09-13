@@ -1,16 +1,20 @@
 package com.jd.coupon.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @author MUYU_Twilighter
  */
+@Data
 @Entity
 @Table(schema = "staff")
-public class Staff implements StaffDto {
+public class Staff implements Serializable {
     public static final Staff EMPTY = new Staff();
     public static final String NAME_REGEX = "^[a-z0-9A-Z]+$";
     public static final String BUS_EMPTY = "EMPTY";
@@ -31,39 +35,12 @@ public class Staff implements StaffDto {
     @Column(length = 32)
     private String business;
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    @Override
-    public Byte getAuth() {
-        return auth;
-    }
-
-    public void setAuth(Byte auth) {
-        this.auth = auth;
-    }
-
-
-    @Override
-    public String getBusiness() {
-        return business;
-    }
-
-    public void setBusiness(String business) {
-        this.business = business;
+    public Boolean hasAuth(Byte auth) {
+        Byte authThis = this.getAuth();
+        if (authThis == null) {
+            return false;
+        } else {
+            return auth == null || authThis >= auth;
+        }
     }
 }
